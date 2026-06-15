@@ -8,68 +8,49 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        blush: {
-          50:  '#fff0f5',
-          100: '#ffe0ec',
-          200: '#ffc2d8',
-          300: '#ff9bbd',
-          400: '#ff6699',
-          500: '#ff3d7f',
-          600: '#f01a64',
-          700: '#cc0f52',
-          800: '#a80f47',
-          900: '#8c1040',
+        midnight: {
+          DEFAULT: '#161a2c',
+          2: '#1f2438',
+          3: '#2c3252',
         },
-        rose: {
-          soft: '#ffe4ec',
+        parchment: {
+          DEFAULT: '#f4ecdb',
+          dim: '#e6d9bf',
         },
+        ember: {
+          DEFAULT: '#e8a857',
+          dim: '#b9854a',
+        },
+        quartz: '#d98d98',
+        mist: '#ece8df',
+        ink: '#2b2530',
+        muted: '#8d93b0',
       },
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        body: ['DM Sans', 'sans-serif'],
-        accent: ['Pacifico', 'cursive'],
+        display: ['Fraunces', 'serif'],
+        body: ['Inter', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'monospace'],
       },
       animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'float-slow': 'float 9s ease-in-out infinite',
-        'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
-        'shimmer': 'shimmer 2.5s linear infinite',
-        'heart-beat': 'heart-beat 1.4s ease-in-out infinite',
-        'fade-up': 'fade-up 0.8s ease forwards',
-        'petal-fall': 'petal-fall 8s linear infinite',
+        'fade-up': 'fade-up 0.7s ease forwards',
+        'twinkle': 'twinkle 4s ease-in-out infinite',
+        'drift': 'drift 10s ease-in-out infinite',
+        'orbit-a': 'orbit-a 22s linear infinite',
+        'orbit-b': 'orbit-b 22s linear infinite',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-18px)' },
-        },
-        'pulse-soft': {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.6' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% center' },
-          '100%': { backgroundPosition: '200% center' },
-        },
-        'heart-beat': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '14%': { transform: 'scale(1.2)' },
-          '28%': { transform: 'scale(1)' },
-          '42%': { transform: 'scale(1.15)' },
-          '70%': { transform: 'scale(1)' },
-        },
         'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '0%': { opacity: '0', transform: 'translateY(18px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        'petal-fall': {
-          '0%': { transform: 'translateY(-10px) rotate(0deg)', opacity: '1' },
-          '100%': { transform: 'translateY(100vh) rotate(720deg)', opacity: '0' },
+        twinkle: {
+          '0%, 100%': { opacity: '0.15' },
+          '50%': { opacity: '0.85' },
         },
-      },
-      backgroundImage: {
-        'rose-gradient': 'linear-gradient(135deg, #fff0f5 0%, #ffe4ec 50%, #ffd6e7 100%)',
-        'shimmer-gradient': 'linear-gradient(90deg, transparent 0%, rgba(255,182,193,0.4) 50%, transparent 100%)',
+        drift: {
+          '0%, 100%': { transform: 'translate3d(0,0,0)' },
+          '50%': { transform: 'translate3d(0,-22px,0)' },
+        },
       },
     },
   },

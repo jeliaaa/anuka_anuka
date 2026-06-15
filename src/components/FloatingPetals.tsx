@@ -1,54 +1,57 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import BinaryStar from './BinaryStar'
 
-const PETALS = ['🌸', '🌺', '💮', '🌷', '💕', '✨', '💖', '🍀']
-
-type Petal = {
+type Star = {
   id: number
-  emoji: string
   left: number
-  delay: number
-  duration: number
+  top: number
   size: number
+  duration: number
+  delay: number
 }
 
-export default function FloatingPetals() {
-  const [petals, setPetals] = useState<Petal[]>([])
+export default function Starfield() {
+  const [stars, setStars] = useState<Star[]>([])
 
   useEffect(() => {
-    const generated: Petal[] = Array.from({ length: 14 }, (_, i) => ({
+    const generated: Star[] = Array.from({ length: 60 }, (_, i) => ({
       id: i,
-      emoji: PETALS[i % PETALS.length],
       left: Math.random() * 100,
-      delay: Math.random() * 8,
-      duration: 8 + Math.random() * 6,
-      size: 0.8 + Math.random() * 0.8,
+      top: Math.random() * 100,
+      size: 1 + Math.random() * 2,
+      duration: 3 + Math.random() * 5,
+      delay: Math.random() * 5,
     }))
-    setPetals(generated)
+    setStars(generated)
   }, [])
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {petals.map((p) => (
+      {stars.map(s => (
         <span
-          key={p.id}
-          className="petal absolute"
+          key={s.id}
+          className="star twinkle"
           style={{
-            left: `${p.left}%`,
-            top: '-30px',
-            fontSize: `${p.size}rem`,
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
+            left: `${s.left}%`,
+            top: `${s.top}%`,
+            width: s.size,
+            height: s.size,
+            animationDuration: `${s.duration}s`,
+            animationDelay: `${s.delay}s`,
           }}
-        >
-          {p.emoji}
-        </span>
+        />
       ))}
-      {/* Static soft blobs */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blush-100 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-float" />
-      <div className="absolute top-0 right-0 w-80 h-80 bg-blush-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-slow" />
-      <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-float" style={{ animationDelay: '3s' }} />
+
+      {/* Ambient glow */}
+      <div className="absolute top-[-10%] right-[-5%] w-[28rem] h-[28rem] bg-ember/10 rounded-full blur-3xl drift" />
+      <div className="absolute bottom-[-10%] left-[-8%] w-96 h-96 bg-quartz/10 rounded-full blur-3xl drift" style={{ animationDelay: '3s' }} />
+
+      {/* Ambient orbit, tucked in a corner */}
+      <div className="hidden md:block absolute bottom-10 right-10 opacity-40">
+        <BinaryStar size={140} />
+      </div>
     </div>
   )
 }

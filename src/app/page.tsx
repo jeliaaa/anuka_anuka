@@ -1,14 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import BinaryStar from '@/components/BinaryStar'
 
-// 💕 Change this to your start date/time
+// Change this to your start date/time
 const START_DATE = new Date('2025-05-22T21:00:00')
 
-type TimeUnit = {
+type Segment = {
   label: string
   value: number
-  emoji: string
 }
 
 function pad(n: number) {
@@ -34,17 +34,17 @@ function getElapsed() {
   return { years, days, hours, minutes, seconds }
 }
 
-const MESSAGES = [
-  "every second with you is a gift 💝",
-  "you make every moment sparkle ✨",
-  "together is my favourite place 🌸",
-  "loving you is my favourite thing 💕",
-  "you are my home 🏡💖",
+const NOTES = [
+  "every second with you is a gift",
+  "you make every moment sparkle",
+  "together is my favourite place",
+  "loving you is my favourite thing",
+  "you are my home",
 ]
 
 export default function CountdownPage() {
   const [time, setTime] = useState(getElapsed())
-  const [msgIndex, setMsgIndex] = useState(0)
+  const [noteIndex, setNoteIndex] = useState(0)
   const [visible, setVisible] = useState(true)
 
   useEffect(() => {
@@ -56,85 +56,84 @@ export default function CountdownPage() {
     const cycle = setInterval(() => {
       setVisible(false)
       setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % MESSAGES.length)
+        setNoteIndex(i => (i + 1) % NOTES.length)
         setVisible(true)
       }, 400)
-    }, 4000)
+    }, 4500)
     return () => clearInterval(cycle)
   }, [])
 
-  const units: TimeUnit[] = time
+  const segments: Segment[] = time
     ? [
-        { label: 'years',   value: time.years,   emoji: '🌟' },
-        { label: 'days',    value: time.days,    emoji: '🌸' },
-        { label: 'hours',   value: time.hours,   emoji: '💫' },
-        { label: 'minutes', value: time.minutes, emoji: '🌷' },
-        { label: 'seconds', value: time.seconds, emoji: '💕' },
+        { label: 'years', value: time.years },
+        { label: 'days', value: time.days },
+        { label: 'hours', value: time.hours },
+        { label: 'min', value: time.minutes },
+        { label: 'sec', value: time.seconds },
       ]
     : []
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
 
-      {/* Header */}
-      <div className="text-center mb-12 animate-fade-up" style={{ animationDelay: '0.1s', opacity: 0, animationFillMode: 'forwards' }}>
-        <p className="font-body text-blush-400 text-sm tracking-widest uppercase mb-3">we have been together for</p>
-        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold shimmer-text leading-tight">
-          a beautiful journey
-        </h1>
-        <div className="flex items-center justify-center gap-2 mt-4">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-blush-300" />
-          <span className="text-xl animate-heart-beat">💖</span>
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-blush-300" />
-        </div>
+      {/* Orbit graphic */}
+      <div className="mb-6 animate-fade-up" style={{ opacity: 0, animationFillMode: 'forwards' }}>
+        <BinaryStar size={88} />
       </div>
 
-      {/* Countdown grid */}
+      {/* Header */}
+      <div className="text-center mb-10 animate-fade-up" style={{ animationDelay: '0.1s', opacity: 0, animationFillMode: 'forwards' }}>
+        <p className="tag mb-3">in continuous orbit since 2025.05.22</p>
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-medium leading-tight">
+          two stars, <span className="glow-text">one gravity</span>
+        </h1>
+      </div>
+
+      {/* Elapsed readout */}
       {time ? (
-        <div className="grid grid-cols-5 gap-2 sm:gap-4 w-full max-w-3xl mb-12">
-          {units.map((unit, i) => (
-            <div
-              key={unit.label}
-              className="animate-fade-up"
-              style={{ animationDelay: `${0.2 + i * 0.1}s`, opacity: 0, animationFillMode: 'forwards' }}
-            >
-              <div className="glass rounded-2xl sm:rounded-3xl p-3 sm:p-6 text-center card-hover border border-blush-200/60 shadow-lg shadow-blush-100/50">
-                <div className="text-xl sm:text-2xl mb-1 sm:mb-2">{unit.emoji}</div>
-                <div className="font-display font-bold text-2xl sm:text-4xl md:text-5xl text-blush-500 count-num leading-none">
-                  {unit.label === 'seconds' || unit.label === 'minutes' || unit.label === 'hours'
-                    ? pad(unit.value)
-                    : unit.value}
+        <div
+          className="surface-dark rounded-2xl px-4 sm:px-10 py-6 sm:py-8 w-full max-w-3xl mb-10 animate-fade-up"
+          style={{ animationDelay: '0.2s', opacity: 0, animationFillMode: 'forwards' }}
+        >
+          <div className="flex flex-wrap items-end justify-center gap-x-2 sm:gap-x-6 gap-y-4">
+            {segments.map((seg, i) => (
+              <div key={seg.label} className="flex items-end">
+                <div className="text-center px-1.5 sm:px-2">
+                  <div className="readout font-display font-medium text-3xl sm:text-5xl md:text-6xl text-mist leading-none">
+                    {seg.label === 'years' ? seg.value : pad(seg.value)}
+                  </div>
+                  <div className="tag mt-2 text-[0.6rem] sm:text-[0.65rem]">{seg.label}</div>
                 </div>
-                <div className="font-body text-blush-400 text-xs sm:text-sm mt-1 sm:mt-2 capitalize">
-                  {unit.label}
-                </div>
+                {i < segments.length - 1 && (
+                  <div className="hidden sm:block text-muted text-2xl pb-5 px-1">·</div>
+                )}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
-        <div className="glass rounded-3xl p-8 text-center mb-12 border border-blush-200">
-          <p className="font-display text-2xl text-blush-500">Our adventure begins on May 22nd 💕</p>
+        <div className="surface-dark rounded-2xl p-8 text-center mb-10">
+          <p className="font-display text-2xl">our log begins on 2025.05.22</p>
         </div>
       )}
 
-      {/* Rotating message */}
+      {/* Rotating note */}
       <div
-        className="text-center transition-opacity duration-400"
+        className="text-center transition-opacity duration-400 min-h-[2rem]"
         style={{ opacity: visible ? 1 : 0 }}
       >
-        <p className="font-display italic text-lg sm:text-xl text-blush-500">
-          {MESSAGES[msgIndex]}
+        <p className="font-display italic text-lg sm:text-xl text-mist/90">
+          &ldquo;{NOTES[noteIndex]}&rdquo;
         </p>
       </div>
 
-      {/* Date started */}
+      {/* Log start */}
       <div
-        className="mt-10 glass rounded-2xl px-6 py-4 border border-blush-200/60 text-center animate-fade-up"
+        className="mt-10 surface rounded-xl px-6 py-3 text-center animate-fade-up"
         style={{ animationDelay: '0.8s', opacity: 0, animationFillMode: 'forwards' }}
       >
-        <p className="font-body text-blush-400 text-xs sm:text-sm">
-          started on <span className="font-semibold text-blush-500">May 22nd, 2025 at 9:00 PM</span> 🌙
+        <p className="font-mono text-xs tracking-widest uppercase text-ink/70">
+          log start &nbsp;—&nbsp; <span className="font-semibold text-ink">2025.05.22 · 21:00</span>
         </p>
       </div>
     </div>
