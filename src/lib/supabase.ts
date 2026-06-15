@@ -17,7 +17,6 @@ export type DictionaryEntry = {
   id: string
   word: string
   definition: string
-  example?: string
-  emoji?: string
+  example: string | null
   created_at: string
 }

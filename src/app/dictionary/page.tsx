@@ -1,43 +1,80 @@
 'use client'
 
-import { useState } from 'react'
-import { Plus, X, Search, BookOpen } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Plus, X, Search } from 'lucide-react'
 import BinaryStar from '@/components/BinaryStar'
-
-type Entry = {
-  id: string
-  word: string
-  definition: string
-  example?: string
-}
-
-// Starter entries — you can edit or delete these!
-const STARTER_ENTRIES: Entry[] = [
-  {
-    id: '1',
-    word: 'our silence',
-    definition: 'the kind of quiet that doesn\'t need to be filled — just being near you is enough.',
-    example: 'we sat together doing nothing and it was everything.',
-  },
-  {
-    id: '2',
-    word: 'good morning, love',
-    definition: 'the first thing that makes any day worth waking up for.',
-    example: 'three words that reset the whole world.',
-  },
-  {
-    id: '3',
-    word: 'our song',
-    definition: 'any song that starts playing and immediately becomes about us.',
-    example: 'i can\'t listen to it without smiling.',
-  },
-]
+import { supabase, DictionaryEntry } from '@/lib/supabase'
 
 export default function DictionaryPage() {
-  const [entries, setEntries] = useState<Entry[]>(STARTER_ENTRIES)
+  const [entries, setEntries] = useState<DictionaryEntry[]>([])
   const [search, setSearch] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ word: '', definition: '', example: '' })
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const isConfigured =
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://your-project-id.supabase.co'
+
+  useEffect(() => {
+    if (isConfigured) fetchEntries()
+    else setLoading(false)
+  }, [isConfigured])
+
+  async function fetchEntries() {
+    setLoading(true)
+    try {
+      const { data, error } = await supabase
+        .from('dictionary')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      setEntries(data || [])
+    } catch (e: unknown) {
+      console.error(e)
+      setError('could not load the lexicon — check your Supabase setup')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function addEntry() {
+    if (!form.word.trim() || !form.definition.trim()) return
+    setSaving(true)
+    try {
+      const { data, error } = await supabase
+        .from('dictionary')
+        .insert({
+          word: form.word.trim(),
+          definition: form.definition.trim(),
+          example: form.example.trim() || null,
+        })
+        .select()
+        .single()
+      if (error) throw error
+      setEntries(prev => [data, ...prev])
+      setForm({ word: '', definition: '', example: '' })
+      setShowForm(false)
+    } catch (e: unknown) {
+      console.error(e)
+      setError('could not save that entry — try again')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function removeEntry(id: string) {
+    try {
+      const { error } = await supabase.from('dictionary').delete().eq('id', id)
+      if (error) throw error
+      setEntries(prev => prev.filter(e => e.id !== id))
+    } catch (e: unknown) {
+      console.error(e)
+      setError('could not remove that entry — try again')
+    }
+  }
 
   const filtered = entries.filter(
     e =>
@@ -45,21 +82,26 @@ export default function DictionaryPage() {
       e.definition.toLowerCase().includes(search.toLowerCase())
   )
 
-  function addEntry() {
-    if (!form.word.trim() || !form.definition.trim()) return
-    const newEntry: Entry = {
-      id: Date.now().toString(),
-      word: form.word.trim(),
-      definition: form.definition.trim(),
-      example: form.example.trim() || undefined,
-    }
-    setEntries(prev => [newEntry, ...prev])
-    setForm({ word: '', definition: '', example: '' })
-    setShowForm(false)
-  }
-
-  function removeEntry(id: string) {
-    setEntries(prev => prev.filter(e => e.id !== id))
+  if (!isConfigured) {
+    return (
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4">
+        <div className="surface rounded-2xl p-8 sm:p-10 text-center max-w-md">
+          <div className="mb-4 flex justify-center"><BinaryStar size={48} /></div>
+          <p className="tag mb-2 text-ember-dim">setup required</p>
+          <h2 className="font-display text-2xl mb-3">the lexicon has no shelf yet</h2>
+          <p className="font-body text-sm mb-6 leading-relaxed text-ink/70">
+            Connect a Supabase project and add your keys to <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs font-mono">.env.local</code>, then create the <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs font-mono">dictionary</code> table.
+          </p>
+          <div className="bg-midnight rounded-xl p-4 text-left text-xs font-mono text-mist border border-midnight-3 overflow-x-auto whitespace-nowrap">
+            <div>NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co</div>
+            <div>NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...</div>
+          </div>
+          <p className="mt-4 text-xs text-ink/50 font-mono uppercase tracking-wider">
+            see SUPABASE_SETUP.md for the table SQL
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -95,6 +137,12 @@ export default function DictionaryPage() {
           <Plus size={14} /> add
         </button>
       </div>
+
+      {error && (
+        <div className="text-center text-quartz mb-6 surface-dark rounded-xl p-3 font-mono text-xs uppercase tracking-wider">
+          {error}
+        </div>
+      )}
 
       {/* Add form modal */}
       {showForm && (
@@ -143,10 +191,10 @@ export default function DictionaryPage() {
 
               <button
                 onClick={addEntry}
-                disabled={!form.word.trim() || !form.definition.trim()}
+                disabled={!form.word.trim() || !form.definition.trim() || saving}
                 className="w-full py-3 rounded-md bg-ink text-parchment font-mono text-xs uppercase tracking-widest hover:bg-ink/80 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
               >
-                file this entry
+                {saving ? 'filing...' : 'file this entry'}
               </button>
             </div>
           </div>
@@ -154,7 +202,13 @@ export default function DictionaryPage() {
       )}
 
       {/* Entries */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="rounded-xl p-5 sm:p-6 surface-dark animate-pulse h-24" />
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="text-center py-20">
           <div className="mb-3 flex justify-center opacity-40"><BinaryStar size={40} /></div>
           <p className="font-display text-lg">
@@ -178,7 +232,7 @@ export default function DictionaryPage() {
 
               <div className="flex items-start gap-4">
                 <span className="font-mono text-xs text-ember-dim mt-1.5 shrink-0 tabular-nums">
-                  {String(entries.length - i).padStart(3, '0')}
+                  {String(filtered.length - i).padStart(3, '0')}
                 </span>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-display text-lg sm:text-xl font-medium leading-snug mb-1.5">
