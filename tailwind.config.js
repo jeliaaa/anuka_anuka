@@ -37,6 +37,7 @@ module.exports = {
         'drift': 'drift 10s ease-in-out infinite',
         'orbit-a': 'orbit-a 22s linear infinite',
         'orbit-b': 'orbit-b 22s linear infinite',
+        'float': 'float 4s ease-in-out infinite',
       },
       keyframes: {
         'fade-up': {
@@ -50,6 +51,10 @@ module.exports = {
         drift: {
           '0%, 100%': { transform: 'translate3d(0,0,0)' },
           '50%': { transform: 'translate3d(0,-22px,0)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-14px)' },
         },
       },
     },

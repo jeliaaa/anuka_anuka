@@ -25,8 +25,8 @@ export default function RootLayout({
           <main className="flex-1 pt-20">
             {children}
           </main>
-          <footer className="text-center py-8 text-muted text-xs font-mono tracking-widest uppercase">
-            two stars, one orbit
+          <footer className="text-center py-8 text-muted text-xs  tracking-widest ">
+            me da Sen - 2026.05.22
           </footer>
         </div>
       </body>

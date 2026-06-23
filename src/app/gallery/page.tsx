@@ -25,7 +25,8 @@ export default function GalleryPage() {
 
   const isConfigured =
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://your-project-id.supabase.co'
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://your-project-id.supabase.co' &&
+    !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   useEffect(() => {
     if (isConfigured) fetchPhotos()
@@ -93,15 +94,15 @@ export default function GalleryPage() {
         <div className="surface rounded-2xl p-8 sm:p-10 text-center max-w-md">
           <div className="mb-4 flex justify-center"><BinaryStar size={48} /></div>
           <p className="tag mb-2 text-ember-dim">setup required</p>
-          <h2 className="font-display text-2xl mb-3">the archive&rsquo;s drawer is empty</h2>
+          <h2 className=" text-2xl mb-3">the archive&rsquo;s drawer is empty</h2>
           <p className="font-body text-sm mb-6 leading-relaxed text-ink/70">
-            Connect a Supabase project and add your keys to <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs font-mono">.env.local</code> to start filing photos.
+            Connect a Supabase project and add your keys to <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs ">.env.local</code> to start filing photos.
           </p>
-          <div className="bg-midnight rounded-xl p-4 text-left text-xs font-mono text-mist border border-midnight-3 overflow-x-auto whitespace-nowrap">
+          <div className="bg-midnight rounded-xl p-4 text-left text-xs  text-mist border border-midnight-3 overflow-x-auto whitespace-nowrap">
             <div>NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co</div>
             <div>NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...</div>
           </div>
-          <p className="mt-4 text-xs text-ink/50 font-mono uppercase tracking-wider">
+          <p className="mt-4 text-xs text-ink/50   tracking-wider">
             then create a public storage bucket named &ldquo;gallery&rdquo;
           </p>
         </div>
@@ -113,9 +114,9 @@ export default function GalleryPage() {
     <div className="max-w-5xl mx-auto px-4 py-10">
       {/* Header */}
       <div className="text-center mb-10 animate-fade-up" style={{ opacity: 0, animationFillMode: 'forwards' }}>
-        <p className="tag mb-3">02 — visual record</p>
-        <h1 className="font-display text-4xl sm:text-5xl font-medium">
-          memories, <span className="glow-text">catalogued</span>
+        <p className="text-xl mb-3">02 - galerea / arqivi</p>
+        <h1 className=" text-4xl sm:text-5xl font-medium">
+          Cveni fotoebi da <span className="glow-text">maimunobebi</span>
         </h1>
       </div>
 
@@ -124,23 +125,23 @@ export default function GalleryPage() {
         <label className="cursor-pointer">
           <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
           <div className={`
-            flex items-center gap-2 px-6 py-3 rounded-md font-mono text-xs uppercase tracking-widest transition-all border
+            flex items-center gap-2 px-6 py-3 rounded-md text-xl tracking-widest transition-all border
             ${uploading
               ? 'bg-midnight-2 text-muted border-midnight-3 cursor-wait'
               : 'bg-midnight-2 text-ember border-ember/30 hover:border-ember hover:bg-midnight-3 active:scale-95'
             }
           `}>
             {uploading ? (
-              <>uploading...</>
+              <>atvirTva...</>
             ) : (
-              <><Upload size={14} /> file a new plate</>
+              <><Upload size={18} /> ha midi daamate</>
             )}
           </div>
         </label>
       </div>
 
       {error && (
-        <div className="text-center text-quartz mb-6 surface-dark rounded-xl p-3 font-mono text-xs uppercase tracking-wider">
+        <div className="text-center text-quartz mb-6 surface-dark rounded-xl p-3  text-xs  tracking-wider">
           {error}
         </div>
       )}
@@ -155,8 +156,8 @@ export default function GalleryPage() {
       ) : photos.length === 0 ? (
         <div className="text-center py-24">
           <div className="mb-4 flex justify-center opacity-40"><BinaryStar size={48} /></div>
-          <p className="font-display text-xl">no plates filed yet</p>
-          <p className="font-mono text-xs uppercase tracking-widest text-muted mt-2">be the first to add one</p>
+          <p className=" text-xl">no plates filed yet</p>
+          <p className=" text-xs  tracking-widest text-muted mt-2">be the first to add one</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -175,7 +176,7 @@ export default function GalleryPage() {
                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               />
               <div className="photo-overlay absolute inset-0 bg-gradient-to-t from-midnight/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex items-end p-2">
-                <span className="font-mono text-[0.65rem] text-ember tracking-widest">no.{String(photos.length - i).padStart(3, '0')}</span>
+                <span className=" text-[0.65rem] text-ember tracking-widest">no.{String(photos.length - i).padStart(3, '0')}</span>
               </div>
             </div>
           ))}

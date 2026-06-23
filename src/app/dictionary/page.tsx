@@ -16,7 +16,8 @@ export default function DictionaryPage() {
 
   const isConfigured =
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://your-project-id.supabase.co'
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://your-project-id.supabase.co' &&
+    !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   useEffect(() => {
     if (isConfigured) fetchEntries()
@@ -88,15 +89,15 @@ export default function DictionaryPage() {
         <div className="surface rounded-2xl p-8 sm:p-10 text-center max-w-md">
           <div className="mb-4 flex justify-center"><BinaryStar size={48} /></div>
           <p className="tag mb-2 text-ember-dim">setup required</p>
-          <h2 className="font-display text-2xl mb-3">the lexicon has no shelf yet</h2>
+          <h2 className=" text-2xl mb-3">the lexicon has no shelf yet</h2>
           <p className="font-body text-sm mb-6 leading-relaxed text-ink/70">
-            Connect a Supabase project and add your keys to <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs font-mono">.env.local</code>, then create the <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs font-mono">dictionary</code> table.
+            Connect a Supabase project and add your keys to <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs ">.env.local</code>, then create the <code className="bg-parchment-dim px-1.5 py-0.5 rounded text-xs ">dictionary</code> table.
           </p>
-          <div className="bg-midnight rounded-xl p-4 text-left text-xs font-mono text-mist border border-midnight-3 overflow-x-auto whitespace-nowrap">
+          <div className="bg-midnight rounded-xl p-4 text-left text-xs  text-mist border border-midnight-3 overflow-x-auto whitespace-nowrap">
             <div>NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co</div>
             <div>NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...</div>
           </div>
-          <p className="mt-4 text-xs text-ink/50 font-mono uppercase tracking-wider">
+          <p className="mt-4 text-xs text-ink/50   tracking-wider">
             see SUPABASE_SETUP.md for the table SQL
           </p>
         </div>
@@ -109,12 +110,12 @@ export default function DictionaryPage() {
 
       {/* Header */}
       <div className="text-center mb-8 animate-fade-up" style={{ opacity: 0, animationFillMode: 'forwards' }}>
-        <p className="tag mb-3">03 — shared vocabulary</p>
-        <h1 className="font-display text-4xl sm:text-5xl font-medium">
-          the <span className="glow-text">lexicon</span>
+        <p className="text-xl mb-3">03 - leqsikoni</p>
+        <h1 className=" text-4xl sm:text-5xl font-medium">
+          Cveni <span className="glow-text">nabodialebi</span>
         </h1>
-        <p className="font-body text-muted text-sm mt-3 max-w-sm mx-auto leading-relaxed">
-          words, moments, and things only we understand — catalogued for whenever we need them.
+        <p className="heading_text text-muted text-sm mt-3 max-w-sm mx-auto leading-relaxed">
+          სიტყვები, ამბები, ხუმრობები და დებილობები, რომლებსაც მხოლოდ ჩვენ ვხვდებით
         </p>
       </div>
 
@@ -124,22 +125,22 @@ export default function DictionaryPage() {
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input
             type="text"
-            placeholder="search the lexicon..."
+            placeholder="მოძებნე..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-md border border-midnight-3 surface-dark font-mono text-sm text-mist placeholder-muted transition-all"
+            className="w-full pl-9 pr-4 py-2.5 rounded-md heading_text border border-midnight-3 surface-dark  text-sm text-mist placeholder-muted transition-all"
           />
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-1.5 px-5 py-2.5 rounded-md bg-midnight-2 text-ember border border-ember/30 text-xs font-mono uppercase tracking-widest hover:border-ember hover:bg-midnight-3 transition-all active:scale-95"
+          className="flex items-center gap-1.5 px-5 py-2.5 rounded-md bg-midnight-2 text-ember border border-ember/30 text-xs   tracking-widest hover:border-ember hover:bg-midnight-3 transition-all active:scale-95"
         >
-          <Plus size={14} /> add
+          <Plus size={16} /> damateba
         </button>
       </div>
 
       {error && (
-        <div className="text-center text-quartz mb-6 surface-dark rounded-xl p-3 font-mono text-xs uppercase tracking-wider">
+        <div className="text-center text-quartz mb-6 surface-dark rounded-xl p-3  text-xs  tracking-wider">
           {error}
         </div>
       )}
@@ -149,7 +150,7 @@ export default function DictionaryPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-midnight/80 backdrop-blur-sm p-4">
           <div className="surface rounded-2xl p-6 sm:p-8 w-full max-w-md">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-display text-xl">new entry</h2>
+              <h2 className=" text-2xl">axali Canaweri</h2>
               <button onClick={() => setShowForm(false)} className="text-ink/40 hover:text-ink">
                 <X size={20} />
               </button>
@@ -157,44 +158,44 @@ export default function DictionaryPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block font-mono text-xs text-ink/50 mb-1.5 uppercase tracking-wider">word or phrase</label>
+                <label className="block text-xl text-ink/50 mb-1.5  tracking-wider">sityva an fraza</label>
                 <input
                   type="text"
-                  placeholder="e.g. our silence, good morning texts..."
+                  placeholder="აიიიი"
                   value={form.word}
                   onChange={e => setForm(f => ({ ...f, word: e.target.value }))}
-                  className="w-full px-4 py-2.5 rounded-md border border-parchment-dim bg-white font-body text-sm text-ink placeholder-ink/30"
+                  className="w-full px-4 py-2.5 heading_text rounded-md border border-parchment-dim bg-white font-body text-sm text-ink placeholder-ink/30"
                 />
               </div>
 
               <div>
-                <label className="block font-mono text-xs text-ink/50 mb-1.5 uppercase tracking-wider">definition</label>
+                <label className="block text-xl text-ink/50 mb-1.5 tracking-wider">Sinaarsi</label>
                 <textarea
-                  placeholder="what does it mean to us?"
+                  placeholder="რა მნიშვნელობას ატარებს?"
                   value={form.definition}
                   onChange={e => setForm(f => ({ ...f, definition: e.target.value }))}
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-md border border-parchment-dim bg-white font-body text-sm text-ink placeholder-ink/30 resize-none"
+                  className="w-full px-4 py-2.5 heading_text rounded-md border border-parchment-dim bg-white font-body text-sm text-ink placeholder-ink/30 resize-none"
                 />
               </div>
 
               <div>
-                <label className="block font-mono text-xs text-ink/50 mb-1.5 uppercase tracking-wider">example (optional)</label>
+                <label className="block text-xl text-ink/50 mb-1.5  tracking-wider">magaliTi (araa aucilebeli)</label>
                 <input
                   type="text"
-                  placeholder="a little memory..."
+                  placeholder="ისტორია"
                   value={form.example}
                   onChange={e => setForm(f => ({ ...f, example: e.target.value }))}
-                  className="w-full px-4 py-2.5 rounded-md border border-parchment-dim bg-white font-body text-sm text-ink placeholder-ink/30"
+                  className="w-full px-4 py-2.5 rounded-md border border-parchment-dim bg-white heading_text font-body text-sm text-ink placeholder-ink/30"
                 />
               </div>
 
               <button
                 onClick={addEntry}
                 disabled={!form.word.trim() || !form.definition.trim() || saving}
-                className="w-full py-3 rounded-md bg-ink text-parchment font-mono text-xs uppercase tracking-widest hover:bg-ink/80 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
+                className="w-full py-3 rounded-md bg-ink text-parchment  text-xs  tracking-widest hover:bg-ink/80 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
               >
-                {saving ? 'filing...' : 'file this entry'}
+                {saving ? 'damateba...' : 'daamate'}
               </button>
             </div>
           </div>
@@ -211,8 +212,8 @@ export default function DictionaryPage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">
           <div className="mb-3 flex justify-center opacity-40"><BinaryStar size={40} /></div>
-          <p className="font-display text-lg">
-            {search ? 'no entries found' : 'the lexicon is empty — file the first word'}
+          <p className=" text-lg">
+            {search ? 'Canaweri ar aris' : 'leqsikoni carielia'}
           </p>
         </div>
       ) : (
@@ -231,18 +232,18 @@ export default function DictionaryPage() {
               </button>
 
               <div className="flex items-start gap-4">
-                <span className="font-mono text-xs text-ember-dim mt-1.5 shrink-0 tabular-nums">
+                <span className="text-xl text-ember-dim mt-1.5 shrink-0 tabular-nums">
                   {String(filtered.length - i).padStart(3, '0')}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-lg sm:text-xl font-medium leading-snug mb-1.5">
+                  <h3 className="heading_text text-lg sm:text-xl font-medium leading-snug mb-1.5">
                     {entry.word}
                   </h3>
-                  <p className="font-body text-ink/80 text-sm sm:text-base leading-relaxed">
+                  <p className="font-body heading_text text-ink/80 text-sm sm:text-base leading-relaxed">
                     {entry.definition}
                   </p>
                   {entry.example && (
-                    <p className="font-display italic text-ink/50 text-sm mt-2">
+                    <p className="italic heading_text text-ink/50 text-sm mt-2">
                       &ldquo;{entry.example}&rdquo;
                     </p>
                   )}
