@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+//@ts-ignore next-line
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Starfield from '@/components/FloatingPetals'
